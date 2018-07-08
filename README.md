@@ -6,7 +6,7 @@ This is a project made for Udacity React Fundamentals course.
 
 ## Using
 
-Use the following commands
+Run the following commands
 
 * clone this repo with `git clone git@github.com:guimpster/reactnd-project-myreads-starter.git`
 * install all project dependencies with `npm install`
