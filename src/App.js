@@ -22,18 +22,17 @@ class BooksApp extends Component {
     key: book.id,
     backgroundImage: book.imageLinks && book.imageLinks.thumbnail,
     title: book.title,
-    authors: book.authors || [],
-    bookShelfKey: book.shelf
+    authors: book.authors.map((author, index) => ({key: `${book.id}_${index}`, name: author})) || [],
+    bookShelfKey: book.shelf || 'none'
   })
 
-  componentDidMount = () => {
-    BooksAPI.getAll().then(books => {
-      console.log('Books found', books);
-      this.setState(prevState => ({ books: books.map(book => this.parseBook(book)) }))
-    })
-  }
-
   bookActions = {
+    refreshBookShelves: () => {
+      BooksAPI.getAll().then(books =>
+        this.setState(prevState => ({ books: books.map(book => this.parseBook(book)) }))
+      )
+    },
+
     updateBookShelf: (book, bookShelfKey) =>
       BooksAPI.update(book, bookShelfKey).then((result) =>
         this.setState(prevState => ({

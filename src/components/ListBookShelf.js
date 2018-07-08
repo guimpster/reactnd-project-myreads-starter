@@ -7,8 +7,11 @@ import BookShelf from './BookShelf'
 class ListBookShelf extends Component {
   static propTypes = {
     bookShelves: PropTypes.array.isRequired,
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    bookActions: PropTypes.objectOf(PropTypes.func).isRequired
   }
+
+  componentDidMount = () => this.props.bookActions.refreshBookShelves()
 
   render() {
     const { bookShelves, books, bookActions } = this.props
@@ -21,7 +24,7 @@ class ListBookShelf extends Component {
         <div className="list-books-content">
           <div>
             {bookShelves.filter(bookShelf => bookShelf.key !== 'none').map(bookShelf => (
-              <div className="bookshelf">
+              <div key={bookShelf.key} className="bookshelf">
                 <h2 className="bookshelf-title">{bookShelf.name}</h2>
                 <BookShelf
                   books={books.filter(book => book.bookShelfKey === bookShelf.key)}

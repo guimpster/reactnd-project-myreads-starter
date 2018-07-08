@@ -6,7 +6,9 @@ import BookShelf from './BookShelf'
 
 class SearchBooks extends Component {
   static propTypes = {
-    bookShelves: PropTypes.array.isRequired
+    bookShelves: PropTypes.array.isRequired,
+    books: PropTypes.array.isRequired,
+    bookActions: PropTypes.objectOf(PropTypes.func).isRequired
   }
 
   state = {
@@ -22,7 +24,8 @@ class SearchBooks extends Component {
         (acc, val) => acc.key === val.key ? val : acc,
         sb))
     }))
-    this.setState({query: query.trim() })
+
+    this.setState({query: query })
   }
 
   clearQuery = () => this.setState({query: ''})

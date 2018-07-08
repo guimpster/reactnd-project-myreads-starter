@@ -1,6 +1,14 @@
 import React, {Component} from 'react'
 
+import PropTypes from 'prop-types'
+
 class Book extends Component {
+  static propTypes = {
+    bookShelves: PropTypes.array.isRequired,
+    book: PropTypes.object.isRequired,
+    bookActions: PropTypes.objectOf(PropTypes.func).isRequired
+  }
+
   moveToBookShelf = (event) => {
     const toBookShelfKey = event.target.value
     const {book, bookActions} = this.props
@@ -19,14 +27,14 @@ class Book extends Component {
             <select onChange={this.moveToBookShelf} value={book.bookShelfKey}>
               <option value="move" disabled>Move to...</option>
               {bookShelves.map(bookShelf => (
-                <option value={bookShelf.key}>{bookShelf.name}</option>
+                <option key={bookShelf.key} value={bookShelf.key}>{bookShelf.name}</option>
               ))}
             </select>
           </div>
         </div>
         <div className="book-title">{book.title}</div>
         {book.authors.map(author => (
-          <div className="book-authors">{author}</div>
+          <div key={author.key} className="book-authors">{author.name}</div>
         ))}
       </div>
     )
