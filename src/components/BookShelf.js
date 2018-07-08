@@ -9,14 +9,14 @@ class BookShelf extends Component {
   }
 
   render() {
-    const {books, categoryList} = this.props
+    const {books, categories, bookActions} = this.props
 
     return (
       <div className="bookshelf-books">
         <ol className="books-grid">
           {books.map(book => (
             <li>
-              <Book book={book} categoryList={categoryList}/>
+              <Book book={book} categories={categories} bookActions={bookActions}/>
             </li>
           ))}
         </ol>

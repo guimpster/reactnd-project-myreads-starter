@@ -6,7 +6,8 @@ import BookShelf from './BookShelf'
 
 class ListCategories extends Component {
   static propTypes = {
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    books: PropTypes.array.isRequired
   }
 
   state = {
@@ -14,7 +15,7 @@ class ListCategories extends Component {
   }
 
   render() {
-    const { categories } = this.props
+    const { categories, books, bookActions } = this.props
 
     return (
       <div className="list-books">
@@ -26,7 +27,10 @@ class ListCategories extends Component {
             {categories.map(category => (
               <div className="bookshelf">
                 <h2 className="bookshelf-title">{category.name}</h2>
-                <BookShelf books={category.books} categoryList={categories.map(category => ({id: category.id, name: category.name}))}/>
+                <BookShelf
+                  books={books.filter(book => book.category_key === category.key)}
+                  bookActions={bookActions}
+                  categories={categories}/>
               </div>
             ))}
           </div>
