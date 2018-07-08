@@ -1,48 +1,65 @@
 import React, {Component} from 'react'
 import {Route} from 'react-router-dom'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 
-import ListCategories from './components/ListCategories'
+import ListBookShelf from './components/ListBookShelf'
 import SearchBooks from './components/SearchBooks'
 
 class BooksApp extends Component {
   state = {
-    categories: [
+    bookShelves: [
       {key: 'currentlyReading', name: 'Currently Reading'},
       {key: 'wantToRead', name: 'Want to Read'},
-      {key: 'read', name: 'Read'}
+      {key: 'read', name: 'Read'},
+      {key: 'none', name: 'None'}
     ],
-    books: [
-      {key: 'mocking_bird', backgroundImage: 'http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api', title: 'To Kill a Mockingbird', authors: ['Harper Lee'], category_key: 'currentlyReading'},
-      {key: 'enders_game', backgroundImage: 'http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api', title: "Ender's Game", authors: ['Orson Scott Card'], category_key: 'currentlyReading'}
-    ]
+    books: []
+  }
+
+  parseBook = book => ({
+    id: book.id,
+    key: book.id,
+    backgroundImage: book.imageLinks && book.imageLinks.thumbnail,
+    title: book.title,
+    authors: book.authors || [],
+    bookShelfKey: book.shelf
+  })
+
+  componentDidMount = () => {
+    BooksAPI.getAll().then(books => {
+      console.log('Books found', books);
+      this.setState(prevState => ({ books: books.map(book => this.parseBook(book)) }))
+    })
   }
 
   bookActions = {
-    changeBookCategory: (book, toCategoryKey) =>
-      this.setState(prevState => ({
-        books: this.state.books.map(b => b.key === book.key ? (b.category_key = toCategoryKey) && b : b)
-      })),
+    updateBookShelf: (book, bookShelfKey) =>
+      BooksAPI.update(book, bookShelfKey).then((result) =>
+        this.setState(prevState => ({
+          books: this.state.books.map(b => b.key === book.key ? (b.bookShelfKey = bookShelfKey) && b : b)
+        })
+      )),
 
-    removeBookFromReading: book =>
-      this.setState(prevState => ({
-        books: this.state.books.filter(b => b.key !== book.key)
-      }))
+    search: query =>
+      BooksAPI.search(query).then(books => (Array.isArray(books) && books.map(book => this.parseBook(book))) || [])
   }
 
   render() {
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          <ListCategories
-            categories={this.state.categories}
+          <ListBookShelf
+            bookShelves={this.state.bookShelves}
             books={this.state.books}
             bookActions={this.bookActions}
             />
         )}/>
         <Route path="/search" render={() => (
-          <SearchBooks/>
+          <SearchBooks
+            bookShelves={this.state.bookShelves}
+            books={this.state.books}
+            bookActions={this.bookActions}/>
         )}/>
       </div>
     )

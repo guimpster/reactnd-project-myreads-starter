@@ -1,27 +1,26 @@
 import React, {Component} from 'react'
 
 class Book extends Component {
-  changeCategory = (event) => {
-    const toCategoryKey = event.target.value
+  moveToBookShelf = (event) => {
+    const toBookShelfKey = event.target.value
     const {book, bookActions} = this.props
 
-    toCategoryKey === 'none' ? bookActions.removeBookFromReading(book) : bookActions.changeBookCategory(book, toCategoryKey)
+    bookActions.updateBookShelf(book, toBookShelfKey)
   }
 
   render() {
-    const {book, categories } = this.props
+    const {book, bookShelves} = this.props
 
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.backgroundImage})` }}></div>
           <div className="book-shelf-changer">
-            <select onChange={this.changeCategory} value={book.category_key}>
+            <select onChange={this.moveToBookShelf} value={book.bookShelfKey}>
               <option value="move" disabled>Move to...</option>
-              {categories.map(category => (
-                <option value={category.key}>{category.name}</option>
+              {bookShelves.map(bookShelf => (
+                <option value={bookShelf.key}>{bookShelf.name}</option>
               ))}
-              <option value="none">None</option>
             </select>
           </div>
         </div>

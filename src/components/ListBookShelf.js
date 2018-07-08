@@ -4,18 +4,14 @@ import PropTypes from 'prop-types'
 
 import BookShelf from './BookShelf'
 
-class ListCategories extends Component {
+class ListBookShelf extends Component {
   static propTypes = {
-    categories: PropTypes.array.isRequired,
+    bookShelves: PropTypes.array.isRequired,
     books: PropTypes.array.isRequired
   }
 
-  state = {
-
-  }
-
   render() {
-    const { categories, books, bookActions } = this.props
+    const { bookShelves, books, bookActions } = this.props
 
     return (
       <div className="list-books">
@@ -24,13 +20,13 @@ class ListCategories extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            {categories.map(category => (
+            {bookShelves.filter(bookShelf => bookShelf.key !== 'none').map(bookShelf => (
               <div className="bookshelf">
-                <h2 className="bookshelf-title">{category.name}</h2>
+                <h2 className="bookshelf-title">{bookShelf.name}</h2>
                 <BookShelf
-                  books={books.filter(book => book.category_key === category.key)}
+                  books={books.filter(book => book.bookShelfKey === bookShelf.key)}
                   bookActions={bookActions}
-                  categories={categories}/>
+                  bookShelves={bookShelves}/>
               </div>
             ))}
           </div>
@@ -43,4 +39,4 @@ class ListCategories extends Component {
   }
 }
 
-export default ListCategories
+export default ListBookShelf
