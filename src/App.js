@@ -22,7 +22,7 @@ class BooksApp extends Component {
     key: book.id,
     backgroundImage: book.imageLinks && book.imageLinks.thumbnail,
     title: book.title,
-    authors: book.authors.map((author, index) => ({key: `${book.id}_${index}`, name: author})) || [],
+    authors: (book.authors && book.authors.map((author, index) => ({key: `${book.id}_${index}`, name: author}))) || [],
     bookShelfKey: book.shelf || 'none'
   })
 
